@@ -1,0 +1,46 @@
+name: Generate pdoc3 Documentation
+
+on:
+  workflow_call:
+    inputs:
+      # Remember: When we want a list we instead use a string of a JSON list.. GHA doesn't support lists for inputs.
+      python-version:
+        required: true
+        type: string
+        description: Python version to build docs on
+      operating-system:
+        required: true
+        type: string
+        description: Operating systems to build docs on
+
+jobs:
+  pdoc3:
+    runs-on: ${{ inputs.operating-system }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ input.python-version }}
+
+      - name: Configure git for pushing
+        shell: bash
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - name: Generate and push docs
+        shell: bash
+        run: |
+          python -m pip install .
+          python -m pip install pdoc3 setuptools
+          python -m pdoc --html $(python setup.py --name) -o docs_tmp -f
+
+          rm -rf docs
+          mv docs_tmp/$(python setup.py --name) docs
+          rm -rf docs_tmp
+
+          git add docs/* || true
+          git commit -a -m "Updating docs" || true
+          git pull --rebase
+          git push origin ${{ github.ref_name }} || true

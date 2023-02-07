@@ -3,14 +3,15 @@ name: Run Tests
 on:
   workflow_call:
     inputs:
+      # Remember: When we want a list we instead use a string of a JSON list.. GHA doesn't support lists for inputs.
       python-versions:
         required: true
         type: string
-        description: "Comma delimited list of python versions to test against"
+        description: JSON-compatible list of python versions to test against
       operating-systems:
         required: false
         type: string
-        description: "Comma delimited list of operating systems to test against"
+        description: JSON-compatible list of operating systems to test against
         default: "['ubuntu-latest','macos-latest','windows-latest']"
 
 jobs:
