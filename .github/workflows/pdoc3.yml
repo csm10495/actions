@@ -3,7 +3,6 @@ name: Generate pdoc3 Documentation
 on:
   workflow_call:
     inputs:
-      # Remember: When we want a list we instead use a string of a JSON list.. GHA doesn't support lists for inputs.
       python-version:
         required: true
         type: string
