@@ -1,0 +1,43 @@
+name: Perform a patch version bump
+
+on:
+  workflow_call:
+    inputs:
+      git-ref:
+        required: false
+        default: ""
+        type: string
+        description: The git ref to build docs on
+    outputs:
+      git-ref:
+        description: The git ref after any changes were made
+        value: ${{ jobs.version-bump.outputs.git-ref }}
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    outputs:
+      git-ref: ${{ steps.doit.outputs.git-ref }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.git-ref }}
+
+      - uses: actions/setup-python@v4
+
+      - name: Configure git for pushing
+        shell: bash
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - name: Perform version bump
+        id: doit
+        shell: bash
+        run: |
+          pip install bump2version
+          bump2version patch
+          git push --follow-tags
+
+          echo "git-ref=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
