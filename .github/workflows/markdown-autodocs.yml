@@ -14,31 +14,19 @@ on:
       file-to-update:
         type: string
         description: File that we intend to update
-      git-ref:
-        required: false
-        default: ""
-        type: string
-        description: The git ref to build on
       operating-system:
         required: true
         type: string
         description: Operating systems to build docs on
-    outputs:
-      git-ref:
-        description: The git ref after any changes were made
-        value: ${{ jobs.markdown-autodocs.outputs.git-ref }}
 
 jobs:
   markdown-autodocs:
     runs-on: ${{ inputs.operating-system }}
-    outputs:
-      git-ref: ${{ steps.doit.outputs.git-ref }}
 
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref_name }}
-          fetch-depth: 0
 
       - uses: actions/setup-python@v4
         with:
@@ -63,5 +51,3 @@ jobs:
           git add ${{ inputs.file-to-update }} || true
           git commit -m "Updating readme" || true
           git push origin ${{ github.ref_name }} || true
-
-          echo "git-ref=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
