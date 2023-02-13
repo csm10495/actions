@@ -41,9 +41,9 @@ jobs:
         shell: bash
         run: |
           pip install .
-          ${{ inputs.cmd-to-run }}}
+          ${{ inputs.cmd-to-run }}
           npm install -g markdown-autodocs
           markdown-autodocs -c code-block -o ${{ inputs.file-to-update }}
           git add ${{ inputs.file-to-update }} || true
           git commit -m "Updating readme" || true
-          git push origin  ${{ github.ref_name }} || true
+          git push origin ${{ github.ref_name }} || true
