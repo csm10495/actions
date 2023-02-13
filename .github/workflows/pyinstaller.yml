@@ -1,0 +1,47 @@
+name: build/upload a pyinstaller onefile
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+        description: Python version to use
+      operating-system:
+        required: true
+        type: string
+        description: Operating system to build on
+      executable-name:
+        required: true
+        type: string
+        description: Name of the executable to build
+      entrypoint-file:
+        required: true
+        type: string
+        description: Entrypoint file to use
+
+jobs:
+  pyinstaller:
+    runs-on: ${{ inputs.operating-system }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Markdown autodocs
+        id: doit
+        shell: bash
+        run: |
+          pip install .
+          pip install pyinstaller==5.6.2
+          pyinstaller --onefile -n "${{ inputs.executable-name }}" "${{ inputs.entrypoint-file }}"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.executable-name }}
+          path: "dist/${{ inputs.executable-name }}"

@@ -17,7 +17,7 @@ on:
       operating-system:
         required: true
         type: string
-        description: Operating systems to build docs on
+        description: Operating system to build docs on
 
 jobs:
   markdown-autodocs:
