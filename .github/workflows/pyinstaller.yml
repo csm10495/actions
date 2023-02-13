@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
 
-      - name: Markdown autodocs
+      - name: Build pyinstaller onefile
         id: doit
         shell: bash
         run: |
