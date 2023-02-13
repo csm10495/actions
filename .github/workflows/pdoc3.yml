@@ -11,13 +11,27 @@ on:
         required: true
         type: string
         description: Operating systems to build docs on
+      git-ref:
+        required: false
+        default: ""
+        type: string
+        description: The git ref to build docs on
+    outputs:
+      git-ref:
+        description: The git ref after any changes were made
+        value: ${{ jobs.pdoc3.outputs.git-ref }}
 
 jobs:
   pdoc3:
     runs-on: ${{ inputs.operating-system }}
+    outputs:
+      git-ref: ${{ steps.doit.outputs.git-ref }}
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.git-ref }}
+
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ inputs.python-version }}
@@ -29,6 +43,7 @@ jobs:
           git config user.email "<>"
 
       - name: Generate and push docs
+        id: doit
         shell: bash
         run: |
           python -m pip install .
@@ -43,3 +58,5 @@ jobs:
           git commit -a -m "Updating docs" || true
           git pull --rebase
           git push origin ${{ github.ref_name }} || true
+
+          echo "git-ref=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
