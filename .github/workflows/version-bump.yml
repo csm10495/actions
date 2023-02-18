@@ -13,6 +13,9 @@ jobs:
           ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v4
+        with:
+          # version shouldn't matter as long as bump2version supports it
+          python-version: "3.11"
 
       - name: Configure git for pushing
         shell: bash
