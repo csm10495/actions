@@ -1,0 +1,43 @@
+name: Creates a github release (via optional new tag) and attaches current artifacts
+
+on:
+  workflow_call:
+    inputs:
+      tag-to-create:
+        required: false
+        type: string
+        description: If given, a tag to create and perform release on
+        default: ""
+
+jobs:
+  markdown-autodocs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts/
+
+      - name: tag if supposed to
+        if: ${{ inputs.tag-to-create }} != ''
+        shell: bash
+        run: |
+          git tag "${{ inputs.tag-to-create }}"
+          git push --tags
+
+      - name: Get version tag
+        id: get-version-tag
+        shell: bash
+        run: |
+          echo "tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Perform release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: artifacts/*
+          tag_name: ${{ steps.get-version-tag.outputs.tag }}
