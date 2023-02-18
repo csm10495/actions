@@ -23,7 +23,6 @@ jobs:
           path: artifacts/
 
       - name: tag if supposed to
-        if:  != ''
         shell: bash
         run: |
           if [[ "${{ inputs.tag-to-create }}" != "" ]]; then
