@@ -29,15 +29,15 @@ jobs:
             git tag "${{ inputs.tag-to-create }}"
             git push --tags
           else
-            echo "No tag to create"
+            echo "No tag to create.. instead will fetch tags"
+            git fetch --tags origin
           fi
 
       - name: Get version tag
         id: get-version-tag
         shell: bash
         run: |
-          git tag --points-at HEAD
-          echo "tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+          echo "tag=$(git tag --points-at HEAD)" | tee -a $GITHUB_OUTPUT
 
       - name: Perform release
         uses: softprops/action-gh-release@v1
