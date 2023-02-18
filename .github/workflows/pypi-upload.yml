@@ -1,0 +1,39 @@
+name: Uploads the current code to pypi
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+        description: Python version to use
+      operating-system:
+        required: false
+        type: string
+        description: Operating system to build/upload on
+        default: 'ubuntu-latest'
+
+jobs:
+  pypi-upload:
+    runs-on: ${{ inputs.operating-system }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
+      - name: Upload to pypi
+        shell: bash
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          pip install setuptools wheel twine
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
