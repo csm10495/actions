@@ -10,7 +10,7 @@ on:
         default: ""
 
 jobs:
-  markdown-autodocs:
+  github-release:
     runs-on: ubuntu-latest
 
     steps:
