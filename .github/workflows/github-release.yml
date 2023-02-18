@@ -23,11 +23,15 @@ jobs:
           path: artifacts/
 
       - name: tag if supposed to
-        if: ${{ inputs.tag-to-create }} != ''
+        if:  != ''
         shell: bash
         run: |
-          git tag "${{ inputs.tag-to-create }}"
-          git push --tags
+          if [[ "${{ inputs.tag-to-create }}" != "" ]]; then
+            git tag "${{ inputs.tag-to-create }}"
+            git push --tags
+          else
+            echo "No tag to create"
+          fi
 
       - name: Get version tag
         id: get-version-tag
