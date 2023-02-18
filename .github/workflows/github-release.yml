@@ -36,6 +36,7 @@ jobs:
         id: get-version-tag
         shell: bash
         run: |
+          git tag --points-at HEAD
           echo "tag=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
 
       - name: Perform release
