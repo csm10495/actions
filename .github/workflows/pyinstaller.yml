@@ -43,6 +43,13 @@ jobs:
           pip install pyinstaller==5.6.2
           pyinstaller --onefile -n "${{ inputs.executable-name }}" "${{ inputs.entrypoint-file }}"
 
+      - name: Simple test executable
+        id: test
+        shell: bash
+        run: |
+          echo "Testing executable via running executable with --help"
+          ./dist/${{ inputs.executable-name }} --help
+
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.executable-name }}
