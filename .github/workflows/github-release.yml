@@ -37,7 +37,7 @@ jobs:
         id: get-version-tag
         shell: bash
         run: |
-          echo "tag=$(git tag --points-at HEAD)" | tee -a $GITHUB_OUTPUT
+          echo "tag=$(git tag --points-at HEAD | git describe --tags --abbrev=0)" | tee -a $GITHUB_OUTPUT
 
       - name: Perform release
         uses: softprops/action-gh-release@v1
