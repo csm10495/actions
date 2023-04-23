@@ -30,7 +30,7 @@ jobs:
             git push --tags
           else
             echo "No tag to create.. instead will fetch tags/pull"
-            git fetch --all --tags origin
+            git fetch --all --tags
             git pull --rebase
           fi
 
