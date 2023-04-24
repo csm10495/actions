@@ -29,9 +29,8 @@ jobs:
             git tag "${{ inputs.tag-to-create }}"
             git push --tags
           else
-            echo "No tag to create.. instead will fetch tags/pull"
-            git fetch --all --tags
-            git pull --rebase
+            echo "No tag to create.. instead will fetch --unshallow"
+            git fetch --unshallow
           fi
 
       - name: Get version tag
