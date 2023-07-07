@@ -37,12 +37,18 @@ jobs:
         id: doit
         shell: bash
         run: |
+          if [[ -f "setup.py" ]]; then
+            PROJECT_NAME="$(python setup.py --name)"
+          else
+            PROJECT_NAME="$(cat pyproject.toml | grep name | head -n 1 | cut -d = -f 2 | tr '"' ' ' | xargs)"
+          fi
+
           python -m pip install .
           python -m pip install pdoc3 setuptools
-          python -m pdoc --html $(python setup.py --name) -o docs_tmp -f
+          python -m pdoc --html "$PROJECT_NAME" -o docs_tmp -f
 
           rm -rf docs
-          mv docs_tmp/$(python setup.py --name) docs
+          mv "docs_tmp/$PROJECT_NAME" docs
           rm -rf docs_tmp
 
           git add docs/* || true
