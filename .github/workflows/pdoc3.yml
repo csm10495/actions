@@ -40,7 +40,7 @@ jobs:
           if [[ -f "setup.py" ]]; then
             PROJECT_NAME="$(python setup.py --name)"
           else
-            PROJECT_NAME="$(cat pyproject.toml | grep name | head -n 1 | cut -d = -f 2 | tr '"' ' ' | xargs)"
+            PROJECT_NAME="$(cat pyproject.toml | grep -A 100 '\[project\]' | grep '^name *' | cut -d = -f 2 | tr -d '"' | tr -d "'" | xargs)"
           fi
 
           python -m pip install .
