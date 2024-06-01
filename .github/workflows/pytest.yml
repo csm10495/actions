@@ -42,7 +42,7 @@ jobs:
       - name: Update pip
         run: python -m pip install -U pip
       - name: Pre Install Script
-        if: ${{ inputs.pre-install-script }} != ''
+        if: inputs.pre-install-script != ''
         run: ${{ inputs.pre-install-script }}
         shell: bash
       - name: Install pytest (legacy.. consider adding dev requirements then setting install-dev-requirements to true)
