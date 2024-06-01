@@ -18,6 +18,11 @@ on:
         type: boolean
         description: Whether to install the 'dev' requirements in addition to its own requirements (and pytest)
         default: false # only false for compatibility since some projects won't have dev requirements
+      pre-install-script:
+        required: false
+        type: string
+        default: ""
+        description: Script to run before installing dev requirements
 
 jobs:
   test:
@@ -36,6 +41,10 @@ jobs:
           cache-dependency-path: setup.py
       - name: Update pip
         run: python -m pip install -U pip
+      - name: Pre Install Script
+        if: ${{ inputs.pre-install-script }} != ''
+        run: ${{ inputs.pre-install-script }}
+        shell: bash
       - name: Install pytest (legacy.. consider adding dev requirements then setting install-dev-requirements to true)
         if: ${{ ! inputs.install-dev-requirements }}
         run: python -m pip install pytest
