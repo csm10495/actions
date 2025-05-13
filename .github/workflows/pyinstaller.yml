@@ -50,7 +50,7 @@ jobs:
           echo "Testing executable via running executable with --help"
           ./dist/${{ inputs.executable-name }} --help
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.executable-name }}
           path: "dist/${{ inputs.executable-name }}"
