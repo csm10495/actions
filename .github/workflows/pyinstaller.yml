@@ -19,6 +19,16 @@ on:
         required: true
         type: string
         description: Entrypoint file to use
+      pre-build-cmd:
+        required: false
+        type: string
+        default: ''
+        description: Optional command to run before the pyinstaller build
+      extra-args:
+        required: false
+        type: string
+        default: ''
+        description: Optional extra arguments to pass to pyinstaller
 
 jobs:
   pyinstaller:
@@ -35,13 +45,18 @@ jobs:
           cache: 'pip'
           cache-dependency-path: setup.py
 
+      - name: Run pre-build command
+        if: inputs.pre-build-cmd != ''
+        shell: bash
+        run: ${{ inputs.pre-build-cmd }}
+
       - name: Build pyinstaller onefile
         id: doit
         shell: bash
         run: |
           pip install .
           pip install pyinstaller==5.13.2
-          pyinstaller --onefile -n "${{ inputs.executable-name }}" "${{ inputs.entrypoint-file }}"
+          pyinstaller --onefile -n "${{ inputs.executable-name }}" ${{ inputs.extra-args }} "${{ inputs.entrypoint-file }}"
 
       - name: Simple test executable
         id: test
