@@ -40,4 +40,8 @@ jobs:
           else
             python -m build
           fi
+          if [[ -z "$TWINE_PASSWORD" ]]; then
+            echo "PYPI_PASSWORD was not set. Unsetting TWINE_PASSWORD"
+            unset TWINE_PASSWORD
+          fi
           twine upload --verbose dist/*
