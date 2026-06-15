@@ -40,4 +40,4 @@ jobs:
           else
             python -m build
           fi
-          twine upload dist/*
+          twine upload --verbose dist/*
